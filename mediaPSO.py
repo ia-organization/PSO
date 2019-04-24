@@ -3,7 +3,7 @@ import csv
 
 def leArquivo(sys.argv[1]):
     arq = open(sys.argv[1], 'r')
-    
+    dic={}
     lst = []
     conteudo=arq.readline()
     
@@ -14,13 +14,15 @@ def leArquivo(sys.argv[1]):
     while conteudo!='':
         if conteudo = '#':
             conteudo=arq.readline()
+            dic[conteudo]
         conteudo=conteudo.split()
+        
         lst.append(conteudo)
         conteudo=arq.readline()
 
 
-def escreveCSV(lst):
-    with open('resultados.csv', mode='w') as resultados_file:
-    gbest_writer = csv.writer(resultados_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
-    gbest_writer.writerow(lst)
+def escreveCSV(dic):
+    with open('resultados.csv', 'w') as f:
+        for key in dic.keys():
+            f.write("%s,%s\n"%(key,dic[key]))
+        f.close()

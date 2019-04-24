@@ -2,6 +2,7 @@
 import random
 import math
 import sys
+import csv
 
 class Particle:
     def __init__(self, v1, v2, x1, x2, pBest = None):
@@ -116,7 +117,7 @@ def main():
 
             #lst_pbest.append(particle_list[i].pBest)
             lst_gbest.append(gbest)
-        dic[k] = [lst_gbest[:]]
+        dic[k] = lst_gbest[:]
             #fim delimitação do domínio
         
         #fim for iteracoes
@@ -131,6 +132,13 @@ def printDic(dic):
             print(j)
         print("#")
 
+
+def escreveCSV(dic):
+    with open('resultados.csv', 'w') as f:
+        writer = csv.writer(f)
+        for key in dic.keys():
+            f.write("%s\n"%(dic[key]))
+            #writer.writerow(dic[key])
 
 if __name__ == "__main__":
     printDic(main())
