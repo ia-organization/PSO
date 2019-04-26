@@ -4,23 +4,43 @@ import math
 import sys
 import csv
 
+class Pbest:
+    x1 = None
+    x2 = None
+    value = None
+
+class Gbest:
+    x1 = 99999
+    x2 = 99999
+    value = 99999
+
 class Particle:
-    def __init__(self, v1, v2, x1, x2, pBest = None):
+    def __init__(self, v1, v2, x1, x2):
         self.v1  = v1
         self.v2 = v2
         self.x1 = x1
         self.x2 = x2
-        self.pBest = pBest
+        self.pBest = Pbest()
 
     def f6_Schaffer(self):
         return 0.5 + (math.sin(math.sqrt(self.x1**2 + self.x2**2))**2 - 0.5)/(1+ 0.001*(self.x1**2 + self.x2**2))**2
 
-
     def fPbest(self, fp):
-        if self.pBest == None:
-            self.pBest = fp
-        elif self.pBest > fp:
-            self.pBest = fp
+        if self.pBest.value == None:
+            self.pBest.value = fp
+            self.pBest.x1 = self.x1
+            self.pBest.x2 = self.x2
+        elif self.pBest.value > fp:
+            self.pBest.value = fp
+            self.pBest.x1 = self.x1
+            self.pBest.x2 = self.x2
+
+    #def fPbest(self, fp):
+    #    if self.pBest == None:
+    #        self.pBest = fp
+    #    elif self.pBest > fp:
+    #        self.pBest = fp
+
 
 def main():
 
@@ -40,7 +60,9 @@ def main():
     INITIAL_V2 = random.randint(vMin,vMax)
 
     particle_list = []
-    gbest = 100000
+    #cassiano
+    #gbest = 100000
+    gbest = Gbest()
 
     #constantes de inércia
     c1 = c2 = 2.05
@@ -63,10 +85,13 @@ def main():
 
             #step 5
             
-            if particle_list[i].pBest < gbest:
-                gbest = particle_list[i].pBest
-                bestIteracao = iteracoes
-
+            #if particle_list[i].pBest < gbest:
+                #gbest = particle_list[i].pBest
+                #cassiano
+            if particle_list[i].pBest.value < gbest.value:
+                gbest.value = particle_list[i].pBest.value
+                gbest.x1 = particle_list[i].pBest.x1
+                gbest.x2 = particle_list[i].pBest.x2
             
             x1 = particle_list[i].x1
             x2 = particle_list[i].x2
@@ -77,8 +102,12 @@ def main():
             r2 = random.random()
 
             #step 6
-            particle_list[i].v1 = v1 + c1*r1*(particle_list[i].pBest - x1) + c2*r2*(gbest - x1)
-            particle_list[i].v2 = v2 + c1*r1*(particle_list[i].pBest - x2) + c2*r2*(gbest - x2)
+            #cassiano
+            #particle_list[i].v1 = v1 + c1*r1*(particle_list[i].pBest - x1) + c2*r2*(gbest - x1)
+            #particle_list[i].v2 = v2 + c1*r1*(particle_list[i].pBest - x2) + c2*r2*(gbest - x2)
+
+            particle_list[i].v1 = v1 + c1*r1*(particle_list[i].pBest.x1 - x1) + c2*r2*(gbest.x1 - x1)
+            particle_list[i].v2 = v2 + c1*r1*(particle_list[i].pBest.x2 - x2) + c2*r2*(gbest.x2 - x2)
 
             # delimitação de velocidade entre -15 e 15
             if particle_list[i].v1 > vMax:
@@ -113,7 +142,8 @@ def main():
                 particle_list[i].v2 = 0
 
             #lst_pbest.append(particle_list[i].pBest)
-            lst_gbest.append(gbest)
+            #cassiano
+            lst_gbest.append(gbest.value)
         dic[k] = lst_gbest[:]
             #fim delimitação do domínio
         
