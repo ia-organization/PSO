@@ -32,9 +32,6 @@ def main():
     domMax = 100
     vMax = 15
     vMin = -15
-    W = 0.9
-
-    bestIteracao = 0
 
     iteracoes = int(sys.argv[1])
 
@@ -124,21 +121,33 @@ def main():
     return dic
     #fim main
 
+def printPorLinha(dic):
+    aux= ''
+    lst = []
+    for key in dic:
+        aux += str(key)
+        for valor in dic[key]:
+            aux += ";" + str(valor)
+        lst.append(aux)
+        aux= ''
+    for valor in lst:
+        print(valor.replace('.', ','))
 
-def printDic(dic):
-    for o in dic:
-        print(o)
-        for j in dic[o]:
-            print(j)
-        print("#")
+def printPorColuna(dic):
+    aux= ''
+    lst = []
+    for key in range(len(dic[0])):
+        aux += str(key)
+        for i in range(len(dic)):
+            aux += "\t" + str(dic[i][key])
+        
+        lst.append(aux)
+        aux= ''            
 
+    for valor in lst:
+        print(valor.replace('.', ','))
 
-def escreveCSV(dic):
-    with open('resultados.csv', 'w') as f:
-        writer = csv.writer(f)
-        for key in dic.keys():
-            f.write("%s\n"%(dic[key]))
-            #writer.writerow(dic[key])
 
 if __name__ == "__main__":
-    printDic(main())
+    dic = main()
+    printPorColuna(dic)
