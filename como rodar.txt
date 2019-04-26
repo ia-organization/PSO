@@ -5,6 +5,14 @@ for($i=0; $i -le 10; $i++){python .\PSO.py NUM >> NOME.csv}
 COMANDO PARA RODAR UMA VEZ
 python .\PSO.py NUM > NOME.csv
 
+
+
+Terminal Linux
+Comando para rodar mais de uma vez concatenando o arquivo CSV
+
+	for i in $(seq 1 10); do python PSO.py NUM >> NOME.csv
+
+
 ONDE:
- - NOME: NOME DO ARQUIVO QUE VOCÊ DESEJA
- - NUM: NÚMERO DE ITERAÇÕES
+ - NOME: NOME DO ARQUIVO QUE VOCÃŠ DESEJA
+ - NUM: NÃšMERO DE ITERAÃ‡Ã•ES
