@@ -1,16 +1,19 @@
+import random
+import math
+
 class Gbest:
-    positions = []
+    positions = list()
     value = 99999
 
 
 class Pbest:
-    positions = []
+    positions =list()
     value = 99999
 
 
 class Particle:
-    positions = []
-    velocity = []
+    positions = list()
+    velocity = list()
     pBest = None
 
     def __init__(self):
@@ -23,11 +26,20 @@ class Particle:
         elif self.pBest.value > fp:
             self.pBest.value = fp
             self.pBest.positions = self.positions[:]
+    
+    def fitness(self):
+        calc_dimensions = 0
+        for d in self.positions:
+            calc_dimensions += d ** 2
+        
+        return 0.5 + (math.sin(math.sqrt(calc_dimensions))**2 - 0.5)/(1+ 0.001*(calc_dimensions))**2
+
 
 
 class Swarm:
 
-    particles = []
+    particles = list()
+    lst_gbest = list()
     gBest = None
     dom_position = 0
     dom_velocity = 0
@@ -39,11 +51,15 @@ class Swarm:
         self.dom_position = dom_position
 
         for p in range(numb_particle):
+            positions = []
+            velocity = []
             particle = Particle()
             for d in range(numb_dimensions):
-                particle.positions.append(random.randint((dom_position * (-1)), dom_position))
-                particle.velocity.append(random.randint((dom_velocity * (-1)), dom_velocity))
-            self.particles.append(particle)
+                positions.append(random.randint((dom_position * (-1)), dom_position))
+                velocity.append(random.randint((dom_velocity * (-1)), dom_velocity))
+            particle.positions = positions[:]
+            particle.velocity = velocity[:]
+            self.particles.append(particle)        
     
     def update_positions(self):
         for p in self.particles:
@@ -75,17 +91,16 @@ class Swarm:
                     p.velocity[i] = (self.dom_velocity * (-1))
 
     def optimize(self):
+        self.lst_gbest = list()
         for p in self.particles:
-            calc_dimensions = 0
-            for d in p.positions:
-                calc_dimensions += d ** 2
-            
-            fp = 0.5 + (math.sin(math.sqrt(calc_dimensions))**2 - 0.5)/(1+ 0.001*(calc_dimensions))**2
+            fp = p.fitness()
             p.saveBestpBest(fp)
 
-            if p.pBest.value < self.gbest.value:
-                self.gbest.value = p.pBest.value
-                self.gbest.positions = p.pBest.positions[:]
+            if p.pBest.value < self.gBest.value:
+                self.gBest.value = p.pBest.value
+                self.gBest.positions = p.pBest.positions[:]
+            
+            self.lst_gbest.append(self.gBest.value)
 
 
 def PSO(numb_iterations, numb_particle, numb_dimensions, range_position, range_velocity):
@@ -96,7 +111,9 @@ def PSO(numb_iterations, numb_particle, numb_dimensions, range_position, range_v
         swarm.optimize()
         swarm.update_velocity()
         swarm.update_positions()
-        dic_results[k] = 
+        dic_results[k] = swarm.lst_gbest[:]
+    
+    return dic_results
 
 if __name__ == "__main__":
-    PSO(10, 2, 100, 15)
+    print(PSO(100, 20, 3, 100, 15))
